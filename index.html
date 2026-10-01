@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff5a1f">
+<meta name="description" content="Realex Cosset Services — food ordering, catering and event services.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="images/realex-logo.png">
+<link rel="stylesheet" href="style.css">
+<title>Realex Cosset Services</title>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<header class="topbar">
+  <a class="brand" href="#home" aria-label="Realex Cosset home"><img src="images/realex-logo.png" alt="Realex Cosset Services logo"></a>
+  <div class="top-actions">
+    <button class="icon-btn" id="searchBtn" aria-label="Search">⌕</button>
+    <button class="icon-btn hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+    <button class="cart-btn" id="cartBtn" aria-label="Open cart">🛒 <span id="cartCount">0</span></button>
+  </div>
+</header>
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#home">Home</a><a href="#menu">Menu</a><a href="#catering">Catering</a><a href="#gallery">Gallery</a><a href="#locations">Locations</a><a href="#contact">Contact</a>
+</nav>
+<main>
+<section id="home" class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">FOOD • FAST FOOD • CATERING</span>
+    <h1>Good food.<br><em>Real service.</em></h1>
+    <p>Fresh meals, grills, snacks and professional catering for everyday orders and special occasions.</p>
+    <div class="hero-actions"><button class="primary" onclick="scrollToSection('menu')">Order Food</button><button class="secondary" onclick="scrollToSection('catering')">Book Catering</button></div>
+    <div class="open-pill" id="openStatus">Checking opening hours…</div>
+  </div>
+  <div class="hero-card"><img src="images/jollof-bbq-chicken.png" alt="Jollof rice and barbecue chicken"><div><b>Today's cravings</b><span>Order your favourites in a few taps.</span></div></div>
+</section>
+<section id="liveAdvert" class="live-ad-wrap" aria-live="polite"></section>
+<section class="quick-grid">
+  <button onclick="scrollToSection('menu')"><span>🍽️</span><b>Order Food</b><small>Meals & grills</small></button>
+  <button onclick="scrollToSection('catering')"><span>👨🏾‍🍳</span><b>Event Catering</b><small>We cook for events</small></button>
+  <button onclick="scrollToSection('inquiry')"><span>💬</span><b>Ask for More</b><small>Custom food requests</small></button>
+  <button onclick="scrollToSection('locations')"><span>📍</span><b>Locations</b><small>Lagos & Ibadan</small></button>
+</section>
+<section id="menu" class="section">
+  <div class="section-head"><div><span class="eyebrow">ORDER ONLINE</span><h2>What are you craving?</h2></div><button class="ghost" id="openSearch">Search food</button></div>
+  <div class="search-wrap" id="searchWrap"><input id="searchInput" placeholder="Search rice, chicken, small chops..."></div>
+  <div class="chips" id="chips"></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+<section id="inquiry" class="dark-panel">
+  <div><span class="eyebrow">NOT ON THE MENU?</span><h2>Tell us what you need.</h2><p>We also prepare swallows, soups, snacks and other meals. Send an inquiry and we'll confirm availability, portion options and price.</p></div>
+  <form id="inquiryForm" class="mini-form"><input name="item" required placeholder="What food do you want?"><input name="quantity" placeholder="Quantity / number of people"><input name="date" type="date"><textarea name="note" placeholder="Extra details"></textarea><button class="primary" type="submit">Send Food Inquiry</button></form>
+</section>
+<section id="catering" class="section">
+  <div class="section-head"><div><span class="eyebrow">EVENT CATERING</span><h2>We cater for your occasion.</h2></div></div>
+  <p class="lead">From intimate gatherings to large celebrations, Realex Cosset Services can provide food preparation, grilling, small chops, buffet service and on-site cooking.</p>
+  <div class="service-grid">
+    <article><span>🎂</span><b>Birthdays</b><p>Food and service for birthday celebrations.</p></article><article><span>👶🏾</span><b>Naming Ceremonies</b><p>Meals and small chops for family gatherings.</p></article><article><span>💍</span><b>Weddings</b><p>Catering support for wedding celebrations.</p></article><article><span>🎓</span><b>Graduations</b><p>Food service for graduation parties.</p></article><article><span>⛪</span><b>Church Events</b><p>Food, grills and event service.</p></article><article><span>🏢</span><b>Corporate Events</b><p>Meals and catering for work events.</p></article><article><span>🎉</span><b>Private Parties</b><p>Custom food packages for celebrations.</p></article><article><span>🔥</span><b>On-Site Cooking</b><p>Our team can cook and grill at your venue.</p></article>
+  </div>
+  <button class="primary wide" onclick="openModal('cateringModal')">Book Catering Service</button>
+</section>
+<section id="gallery" class="section">
+  <div class="section-head"><div><span class="eyebrow">FROM OUR KITCHEN</span><h2>Food & service gallery</h2></div></div>
+  <div class="gallery" id="galleryGrid"></div>
+</section>
+<section id="locations" class="section location-section">
+  <div class="section-head"><div><span class="eyebrow">FIND US</span><h2>Our locations</h2></div></div>
+  <div class="map-panel"><iframe title="Realex Cosset locations map" src="https://www.google.com/maps?q=Bariga,Lagos,Nigeria&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+  <div class="location-grid">
+    <article><span class="tag">HEAD OFFICE • LAGOS</span><h3>3 Amudatu Abeke Street</h3><p>Bariga, Lagos.</p><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=3+Amudatu+Abeke+Street+Bariga+Lagos" target="_blank" rel="noopener">Get Directions →</a></article>
+    <article><span class="tag">BRANCH • LAGOS</span><h3>1 Soji Oshodi Street</h3><p>Pedro, Bariga, Lagos.</p><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=1+Soji+Oshodi+Street+Pedro+Bariga+Lagos" target="_blank" rel="noopener">Get Directions →</a></article>
+    <article><span class="tag">BRANCH • IBADAN</span><h3>FanoWole Oloya Street</h3><p>Apete / Oloya, Ibadan.</p><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=FanoWole+Oloya+Street+Ibadan" target="_blank" rel="noopener">Get Directions →</a></article>
+  </div>
+</section>
+<section id="contact" class="contact-section">
+  <div><span class="eyebrow">CONTACT REALex COSSET</span><h2>Need food or catering?</h2><p>Reach us directly. We'll help you with your order, custom request or event.</p></div>
+  <div class="contact-grid">
+    <a href="tel:+2348020551533"><strong>📞 08020551533</strong><small>Call</small></a>
+    <a href="tel:+2348180029999"><strong>📞 08180029999</strong><small>Call</small></a>
+    <a href="mailto:realexcosset@gmail.com"><strong>✉️ realexcosset@gmail.com</strong><small>Email</small></a>
+    <a href="https://wa.me/2348180029999" target="_blank" rel="noopener"><strong>💬 WhatsApp</strong><small>Chat with us</small></a>
+    <a href="https://www.instagram.com/realexcosset?stkn=MTVhOXlsZ2h3dmF3ag==" target="_blank" rel="noopener"><strong>Instagram</strong><small>@realexcosset</small></a>
+    <a href="https://www.tiktok.com/@realexcosset" target="_blank" rel="noopener"><strong>TikTok</strong><small>@realexcosset</small></a>
+    <a href="https://www.facebook.com/tajudeen.rilwan.9" target="_blank" rel="noopener"><strong>Facebook</strong><small>Facebook profile</small></a>
+    <a href="https://www.facebook.com/profile.php?id=100063764952105" target="_blank" rel="noopener"><strong>Facebook</strong><small>Facebook page</small></a>
+  </div>
+  <div class="hours"><b>Opening hours</b><span>Mon–Sat: 10:00 AM – 9:00 PM</span><span>Sunday: 1:00 PM – 10:00 PM</span></div>
+</section>
+<section class="contact-strip"><div><span class="eyebrow">READY TO ORDER?</span><h2>Let's get your food sorted.</h2></div><a class="primary" href="https://wa.me/2348180029999?text=Hello%20Realex%20Cosset%20Services%2C%20I%20would%20like%20to%20make%20an%20inquiry." target="_blank" rel="noopener">Chat on WhatsApp</a></section>
+</main>
+<nav class="bottom-nav"><a href="#home">⌂<small>Home</small></a><a href="#menu">🍽️<small>Menu</small></a><button id="bottomCart">🛒<small>Cart</small><i id="bottomCount">0</i></button><a href="#catering">👨🏾‍🍳<small>Catering</small></a><a href="#locations">📍<small>Locations</small></a></nav>
+<div class="drawer" id="cartDrawer"><div class="drawer-card"><div class="drawer-head"><h2>Your cart</h2><button onclick="closeDrawer()">×</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">₦0</strong></div><button class="primary wide" onclick="openCheckout()">Proceed to checkout</button></div></div>
+<div class="modal" id="cateringModal"><div class="modal-card"><button class="modal-close" onclick="closeModal('cateringModal')">×</button><span class="eyebrow">CATERING REQUEST</span><h2>Tell us about your event.</h2><form id="cateringForm" class="mini-form"><input name="name" required placeholder="Full name"><input name="phone" required placeholder="Phone / WhatsApp"><select name="event"><option>Birthday</option><option>Wedding</option><option>Naming Ceremony</option><option>Graduation</option><option>Church Event</option><option>Corporate Event</option><option>Private Party</option><option>Other</option></select><input name="date" type="date" required><input name="guests" placeholder="Expected number of guests"><input name="location" placeholder="Event location"><textarea name="request" placeholder="Food or service needed"></textarea><button class="primary" type="submit">Send Catering Request</button></form></div></div>
+<div class="modal" id="checkoutModal"><div class="modal-card"><button class="modal-close" onclick="closeModal('checkoutModal')">×</button><span class="eyebrow">CHECKOUT</span><h2>Complete your order.</h2><form id="checkoutForm" class="mini-form"><input name="name" required placeholder="Full name"><input name="phone" required placeholder="Phone / WhatsApp"><select name="method" id="fulfillmentMethod"><option value="Delivery">Delivery</option><option value="Pickup">Pickup</option></select><div id="deliveryFields" class="delivery-fields"><select name="deliveryLocation" id="deliveryLocation"><option value="">Select delivery location</option><option value="Apete">Apete — ₦2,000</option><option value="Bariga">Bariga — ₦2,500</option><option value="Ikeja">Ikeja — ₦3,000</option></select><input name="address" id="deliveryAddress" required placeholder="Full delivery address"></div><div class="checkout-summary"><div><span>Food subtotal</span><strong id="checkoutSubtotal">₦0</strong></div><div><span>Delivery fee</span><strong id="checkoutDeliveryFee">₦0</strong></div><div class="grand"><span>Total</span><strong id="checkoutGrandTotal">₦0</strong></div></div><textarea name="note" placeholder="Order note"></textarea><button class="primary" type="submit">Place Order</button></form></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase.js"></script>
+<script src="app.js"></script>
+</body></html>

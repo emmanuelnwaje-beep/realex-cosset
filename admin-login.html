@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff5a1f">
+<title>Realex Cosset — Admin Login</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#11100e;color:#f7f1e8;font-family:Arial,sans-serif;padding:20px}.card{width:min(430px,100%);background:#191714;border:1px solid #2c2823;border-radius:26px;padding:30px;box-shadow:0 20px 70px rgba(0,0,0,.35)}.logo{width:74px;height:74px;border-radius:18px;object-fit:cover;background:#24201b;display:block;margin:0 auto 18px}.eyebrow{color:#ff8b43;font-size:11px;font-weight:800;letter-spacing:2px;text-align:center}.card h1{text-align:center;margin:9px 0 8px}.muted{text-align:center;color:#9e968c;line-height:1.6;font-size:14px}.form{display:grid;gap:12px;margin-top:24px}.form label{font-size:13px;color:#cfc6bb;font-weight:700}.form input{display:block;width:100%;margin-top:7px;padding:14px;border-radius:13px;border:1px solid #2c2823;background:#11100e;color:#fff;outline:none}.form input:focus{border-color:#ff5a1f}.btn{width:100%;padding:14px;border:0;border-radius:14px;background:#ff5a1f;color:#fff;font-weight:800;font-size:15px;cursor:pointer}.btn:disabled{opacity:.6}.msg{min-height:20px;text-align:center;color:#ffb49a;font-size:13px;margin-top:10px}.back{display:block;text-align:center;margin-top:18px;color:#9e968c;text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+<img class="logo" src="images/realex-logo.png" alt="Realex Cosset Services">
+<div class="eyebrow">REALEX COSSET SERVICES</div>
+<h1>Admin Login</h1>
+<p class="muted">Sign in with the administrator account created in Supabase Authentication.</p>
+<form id="loginForm" class="form">
+<label>Email<input id="email" type="email" autocomplete="username" required placeholder="Admin email"></label>
+<label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="Password"></label>
+<button class="btn" id="loginBtn" type="submit">Sign In</button>
+</form>
+<div id="msg" class="msg"></div>
+<a class="back" href="index.html">← Back to customer app</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+const msg=document.getElementById('msg'),btn=document.getElementById('loginBtn');
+function show(t){msg.textContent=t}
+if(!window.REALEX_SUPABASE_URL||!window.REALEX_SUPABASE_PUBLISHABLE_KEY){show('Supabase configuration is not filled in yet.');}
+// IMPORTANT: always start the admin login with a fresh Supabase session.
+// This prevents a previously saved browser session from bypassing the login form.
+const client=window.supabase?.createClient(
+  window.REALEX_SUPABASE_URL||'',
+  window.REALEX_SUPABASE_PUBLISHABLE_KEY||'',
+  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}
+);
+
+// Clear any old persisted admin session when this login page is opened.
+(async()=>{if(client){try{await client.auth.signOut({scope:'local'});}catch(e){console.warn('Fresh login cleanup:',e)}}})();
+// Never auto-redirect from the login page. The administrator must enter credentials.
+document.getElementById('loginForm').onsubmit=async e=>{e.preventDefault();if(!client){show('Supabase is not configured.');return}btn.disabled=true;show('Signing in…');const {data,error}=await client.auth.signInWithPassword({email:document.getElementById('email').value.trim(),password:document.getElementById('password').value});if(error){show(error.message);btn.disabled=false;return}const {data:admin,error:adminError}=await client.from('admin_users').select('user_id,active').eq('user_id',data.user.id).eq('active',true).maybeSingle();if(adminError||!admin){await client.auth.signOut();sessionStorage.removeItem('realex_admin_login_granted');show('This account is not registered as a Realex administrator.');btn.disabled=false;return}sessionStorage.setItem('realex_admin_login_granted','1');window.location.href='admin_index.html';};
+</script>
+</body>
+</html>

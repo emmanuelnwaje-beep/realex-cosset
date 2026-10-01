@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171512">
+<title>Realex Cosset Admin</title>
+<link rel="stylesheet" href="admin_style.css">
+</head>
+<body>
+<aside id="side">
+  <div class="brand"><b>RC</b><span><strong>Realex Cosset</strong><small>Admin Panel</small></span></div>
+  <nav>
+    <button class="active" data-page="dashboard">⌂ Dashboard</button>
+    <button data-page="orders">▣ Orders <i id="ordersBadge">0</i></button>
+    <button data-page="menu">☷ Menu</button>
+    <button data-page="customers">♙ Customers</button>
+    <button data-page="catering">✦ Catering <i id="cateringBadge">0</i></button>
+    <button data-page="inquiries">? Food Inquiries <i id="inquiryBadge">0</i></button>
+    <button data-page="locations">⌖ Locations</button>
+    <button data-page="reports">▥ Reports</button>
+    <button data-page="settings">⚙ Settings</button>
+    <button data-page="ads">📢 Advertisements</button>
+  </nav>
+  <button id="logoutBtn" type="button"
+  style="
+    width:calc(100% - 24px);
+    margin:16px 12px;
+    padding:12px 14px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    background:#2a211d;
+    color:#ff7a45;
+    font-weight:800;
+    cursor:pointer;
+    text-align:left;
+  "
+>
+  ↪ Logout
+</button>
+  <footer>Realex Cosset Services<br><small>Live Supabase dashboard</small></footer>
+</aside>
+
+<main>
+<header>
+  <button id="hamb" aria-label="Open menu">☰</button>
+  <div><h1 id="title">Dashboard</h1><p id="sub">Welcome back. Here's what's happening today.</p></div>
+  <button id="refresh" class="icon-btn" title="Refresh data">↻</button>
+  <span class="admin" id="adminAvatar">A</span>
+</header>
+
+<div class="wrap">
+<section id="dashboard" class="page on">
+  <div class="hero"><div><small>REALEX COSSET SERVICES</small><h2>Good day, Admin 👋</h2><p>Manage orders, menu, customers and catering from one place.</p></div><button class="primary" data-go="orders">View Orders →</button></div>
+  <div class="stats">
+    <article><small>Today's Sales</small><strong id="statSales">₦0</strong><em id="statSalesNote">0 orders today</em></article>
+    <article><small>Total Orders</small><strong id="statOrders">0</strong><em id="statOrdersNote">0 active</em></article>
+    <article><small>Customers</small><strong id="statCustomers">0</strong><em>From real orders</em></article>
+    <article><small>Catering Requests</small><strong id="statCatering">0</strong><em id="statCateringNote">0 need attention</em></article>
+  </div>
+  <div class="cols"><div class="panel"><div class="panel-head"><h3>Recent Orders</h3><button class="link-btn" data-go="orders">See all</button></div><div id="recent"></div></div>
+  <div class="panel"><div class="panel-head"><h3>Quick Actions</h3></div><div class="quick">
+    <button data-go="menu">＋<b>Add Food</b><small>Create menu item</small></button>
+    <button data-go="orders">✓<b>Manage Orders</b><small>Update status</small></button>
+    <button data-go="catering">✦<b>Catering</b><small>Review requests</small></button>
+    <button data-go="reports">▥<b>Reports</b><small>View performance</small></button>
+  </div></div></div>
+</section>
+
+<section id="orders" class="page">
+  <div class="bar"><div><h2>Orders</h2><p>Track and update customer orders.</p></div><div class="tools"><button class="danger" onclick="deleteCancelledOrders()">Delete Cancelled</button><input id="search" placeholder="Search orders..." autocomplete="off"><select id="filter"><option value="All">All statuses</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="preparing">Preparing</option><option value="ready">Ready</option><option value="delivered">Delivered</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div></div>
+  <div class="panel table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Delivery</th><th>Status</th><th>Action</th></tr></thead><tbody id="ordersBody"></tbody></table></div>
+</section>
+
+<section id="menu" class="page">
+  <div class="bar"><div><h2>Menu Management</h2><p>Add, edit prices, names, pictures, categories and availability.</p></div><button class="primary" id="addFood">＋ Add Food</button></div>
+  <div class="menu-tools"><input id="menuSearch" placeholder="Search food..." autocomplete="off"><select id="menuCategory"><option value="">All categories</option></select></div>
+  <div id="foods" class="cards food-grid"></div>
+</section>
+
+<section id="customers" class="page">
+  <div class="bar"><div><h2>Customers</h2><p>Customer information and order history.</p></div><input id="customerSearch" placeholder="Search customers..." autocomplete="off"></div>
+  <div class="panel table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th>Action</th></tr></thead><tbody id="customersBody"></tbody></table></div>
+</section>
+
+<section id="catering" class="page"><div class="bar"><div><h2>Catering Requests</h2><p>Manage events and catering enquiries.</p></div></div><div id="cateringGrid" class="cards"></div></section>
+<section id="inquiries" class="page"><div class="bar"><div><h2>Food Inquiries</h2><p>Custom food requests outside the regular menu.</p></div></div><div id="inquiryGrid" class="cards"></div></section>
+
+<section id="locations" class="page">
+  <div class="bar"><div><h2>Locations</h2><p>Change addresses here. The customer app will use the saved active locations.</p></div><button class="primary" id="addBranch">＋ Add Location</button></div>
+  <div id="branchesGrid" class="cards locations"></div>
+</section>
+
+<section id="ads" class="page">
+  <div class="bar"><div><h2>Advertisements</h2><p>Create live promotional banners for the customer app.</p></div><button class="primary" id="addAd">＋ Add Advert</button></div>
+  <div id="adsGrid" class="cards ads-grid"></div>
+</section>
+
+<section id="reports" class="page"><div class="bar"><div><h2>Reports</h2><p>Live business performance from Supabase.</p></div><button class="secondary" id="csv">Export Orders CSV</button></div>
+  <div class="stats"><article><small>Last 7 Days</small><strong id="reportWeek">₦0</strong><em>Sales</em></article><article><small>This Month</small><strong id="reportMonth">₦0</strong><em>Sales</em></article><article><small>Average Order</small><strong id="reportAverage">₦0</strong><em>Delivered/completed</em></article><article><small>Delivery Fees</small><strong id="reportDelivery">₦0</strong><em>This month</em></article></div>
+  <div class="panel chart"><div class="panel-head"><h3>Sales — Last 7 Days</h3></div><div class="bars" id="salesBars"></div></div>
+</section>
+
+<section id="settings" class="page"><div class="bar"><div><h2>Settings</h2><p>Business information used by the admin panel.</p></div><button class="primary" id="saveSettings">Save Changes</button></div>
+  <div class="panel form"><label>Business Name<input id="setName" value="Realex Cosset Services"></label><label>Email<input id="setEmail" type="email" value="realexcosset@gmail.com"></label><label>Phone<input id="setPhone" value="08020551533"></label><label>Second Phone<input id="setPhone2" value="08180029999"></label><label>Opening Hours<input id="setHours" value="Mon–Sat 10 AM–9 PM | Sun 1 PM–10 PM"></label><label>Service Description<textarea id="setDescription">Indoor & outdoor service, small chops, grilling service, boys and home delivery service, fresh samosa & spring roll.</textarea></label></div>
+</section>
+</div>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="modal" id="adModal" aria-hidden="true"><div class="modal-card">
+<button class="modal-close" id="closeAdModal" type="button">×</button>
+<span class="eyebrow">LIVE ADVERTISEMENT</span><h2 id="adModalTitle">Add Advert</h2>
+<form id="adForm" class="form-grid">
+<input type="hidden" id="adId">
+<label>Advert title<input id="adTitle" required placeholder="Ready-to-Fry Samosa & Spring Roll"></label>
+<label>Advert message<textarea id="adBody" placeholder="Fresh ready-to-fry samosa and spring roll available now."></textarea></label>
+<label>Image URL <span class="hint">or upload below</span><input id="adImageUrl" type="url" placeholder="https://..."></label>
+<label class="upload">Upload advert picture<input id="adImageFile" type="file" accept="image/*"><small>Uses the existing Supabase product-images bucket.</small></label>
+<div id="adImagePreview" class="image-preview"><span>No image selected</span></div>
+<label>Button text<input id="adButtonText" placeholder="Order Now"></label>
+<label>Button link<input id="adButtonLink" placeholder="https://wa.me/2348180029999"></label>
+<label class="switch-row"><span>Show on customer app</span><input id="adActive" type="checkbox" checked></label>
+<div class="modal-actions"><button type="button" class="secondary" id="cancelAd">Cancel</button><button type="submit" class="primary" id="saveAd">Save Advert</button></div>
+</form></div></div>
+
+<div class="modal" id="branchModal" aria-hidden="true"><div class="modal-card">
+<button class="modal-close" id="closeBranchModal" type="button">×</button>
+<span class="eyebrow">BUSINESS LOCATION</span><h2 id="branchModalTitle">Add Location</h2>
+<form id="branchForm" class="form-grid">
+<input type="hidden" id="branchId">
+<label>Location name<input id="branchName" required placeholder="Lagos Head Office"></label>
+<label>Type<input id="branchType" required placeholder="Head Office / Branch"></label>
+<label>Full address<textarea id="branchAddress" required placeholder="Enter complete address"></textarea></label>
+<label>City<input id="branchCity" placeholder="Lagos"></label>
+<label class="switch-row"><span>Show on customer app</span><input id="branchActive" type="checkbox" checked></label>
+<div class="modal-actions"><button class="secondary" id="cancelBranch" type="button">Cancel</button><button class="primary" type="submit">Save Location</button></div>
+</form></div></div>
+
+<div class="modal" id="foodModal" aria-hidden="true"><div class="modal-card">
+  <button class="modal-close" id="closeFoodModal" aria-label="Close">×</button><div class="eyebrow">MENU ITEM</div><h2 id="foodModalTitle">Add Food</h2>
+  <form id="foodForm" class="form-grid">
+    <input type="hidden" id="foodId">
+    <label>Food name<input id="foodName" required placeholder="e.g. Shawarma"></label>
+    <label>Price (₦)<input id="foodPrice" required type="number" min="0" step="50" placeholder="2500"></label>
+    <label>Category<input id="foodCategory" placeholder="Fast Food"></label>
+    <label>Description<textarea id="foodDescription" placeholder="Short description"></textarea></label>
+    <label>Picture URL <span class="hint">or upload below</span><input id="foodImageUrl" type="url" placeholder="https://..."></label>
+    <label class="upload">Upload picture<input id="foodImageFile" type="file" accept="image/*"><small>Uses Supabase Storage bucket: product-images</small></label>
+    <div id="imagePreview" class="image-preview"><span>No image selected</span></div>
+    <label class="switch-row"><span>Available for ordering</span><input id="foodAvailable" type="checkbox" checked></label>
+    <div class="modal-actions"><button type="button" class="secondary" id="cancelFood">Cancel</button><button type="submit" class="primary" id="saveFood">Save Food</button></div>
+  </form>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="admin_script.js"></script>
+</body>
+</html>
