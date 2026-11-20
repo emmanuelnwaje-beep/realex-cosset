@@ -9,6 +9,18 @@
 <link rel="icon" href="images/realex-logo.png">
 <link rel="stylesheet" href="style.css">
 <title>Realex Cosset Services</title>
+
+<style>
+.install-app-section{max-width:1170px;margin:18px auto 110px;padding:28px 30px;background:linear-gradient(135deg,#254b39,#183528);border:1px solid rgba(255,255,255,.12);border-radius:24px;display:flex;align-items:center;justify-content:space-between;gap:22px;color:#fff;box-shadow:0 14px 35px rgba(25,55,39,.14)}
+.install-app-copy h2{font-family:Manrope, sans-serif;font-size:clamp(23px,4vw,34px);margin:8px 0;color:#fff}
+.install-app-copy p{margin:0;color:rgba(255,255,255,.78);line-height:1.6}
+.install-app-section .eyebrow{color:#e5b18f;letter-spacing:1.5px;font-size:11px;font-weight:800}
+.install-app-button{flex:0 0 auto;border:0;border-radius:999px;padding:15px 25px;background:#b84f2b;color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .2s,background .2s}
+.install-app-button:hover{background:#a94425;transform:translateY(-2px)}
+.install-app-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:650px){.install-app-section{margin:14px 16px 105px;padding:23px 20px;display:grid;text-align:center;justify-items:center;gap:17px}.install-app-button{width:100%;max-width:280px}}
+</style>
+
 </head>
 <body>
 <div id="toast" class="toast"></div>
@@ -88,6 +100,16 @@
 </section>
 <section class="contact-strip"><div><span class="eyebrow">READY TO ORDER?</span><h2>Let's get your food sorted.</h2></div><a class="primary" href="https://wa.me/2348180029999?text=Hello%20Realex%20Cosset%20Services%2C%20I%20would%20like%20to%20make%20an%20inquiry." target="_blank" rel="noopener">Chat on WhatsApp</a></section>
 </main>
+<section class="install-app-section" aria-label="Install Realex Cosset app">
+  <div class="install-app-copy">
+    <span class="eyebrow">TAKE US WITH YOU</span>
+    <h2>Enjoy Realex Cosset on your phone.</h2>
+    <p>Install our app for quicker access to the menu, orders and catering.</p>
+  </div>
+  <button class="install-app-button" id="installAppBtn" type="button">
+    <span aria-hidden="true">↓</span> Install App
+  </button>
+</section>
 <nav class="bottom-nav"><a href="#home">⌂<small>Home</small></a><a href="#menu">🍽️<small>Menu</small></a><button id="bottomCart">🛒<small>Cart</small><i id="bottomCount">0</i></button><a href="#catering">👨🏾‍🍳<small>Catering</small></a><a href="#locations">📍<small>Locations</small></a></nav>
 <div class="drawer" id="cartDrawer"><div class="drawer-card"><div class="drawer-head"><h2>Your cart</h2><button onclick="closeDrawer()">×</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">₦0</strong></div><button class="primary wide" onclick="openCheckout()">Proceed to checkout</button></div></div>
 <div class="modal" id="cateringModal"><div class="modal-card"><button class="modal-close" onclick="closeModal('cateringModal')">×</button><span class="eyebrow">CATERING REQUEST</span><h2>Tell us about your event.</h2><form id="cateringForm" class="mini-form"><input name="name" required placeholder="Full name"><input name="phone" required placeholder="Phone / WhatsApp"><select name="event"><option>Birthday</option><option>Wedding</option><option>Naming Ceremony</option><option>Graduation</option><option>Church Event</option><option>Corporate Event</option><option>Private Party</option><option>Other</option></select><input name="date" type="date" required><input name="guests" placeholder="Expected number of guests"><input name="location" placeholder="Event location"><textarea name="request" placeholder="Food or service needed"></textarea><button class="primary" type="submit">Send Catering Request</button></form></div></div>
@@ -96,4 +118,51 @@
 <script src="supabase-config.js"></script>
 <script src="supabase.js"></script>
 <script src="app.js"></script>
+<script>
+(() => {
+  const installButton = document.getElementById('installAppBtn');
+  if (!installButton) return;
+  let installPrompt = null;
+
+  const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const showInstalledState = () => {
+    installButton.innerHTML = '<span aria-hidden="true">✓</span> App Installed';
+    installButton.disabled = true;
+    installButton.style.opacity = '.75';
+    installButton.style.cursor = 'default';
+  };
+
+  if (isStandalone()) showInstalledState();
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    installButton.hidden = false;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    installPrompt = null;
+    showInstalledState();
+  });
+
+  installButton.addEventListener('click', async () => {
+    if (isStandalone()) {
+      showInstalledState();
+      return;
+    }
+    if (installPrompt) {
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
+      return;
+    }
+    const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const message = isIOS
+      ? 'To install Realex Cosset: tap the Share button in Safari, then choose “Add to Home Screen”.'
+      : 'To install Realex Cosset, open this website in Chrome, tap the browser menu (⋮), then choose “Install app” or “Add to Home screen”.';
+    window.alert(message);
+  });
+})();
+</script>
+
 </body></html>
